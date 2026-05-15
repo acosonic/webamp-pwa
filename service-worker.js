@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v22';
+const CACHE_VERSION = 'v23';
 const CACHE_NAME = `webamp-${CACHE_VERSION}`;
 
 const SCOPE = new URL(self.registration.scope).pathname;

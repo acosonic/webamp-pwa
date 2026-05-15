@@ -1,5 +1,153 @@
 /* Webamp PWA — app.js */
 
+// ── i18n ──
+const I18N = {
+  en: {
+    install_btn: '⬇ Install',
+    fullscreen_btn: '⛶ Fullscreen',
+    tab_radio: '📻 Radio',
+    tab_skins: '🎨 Skins',
+    tab_files: '📁 Files',
+    tab_about: 'ℹ️ About',
+    search_btn: 'Search',
+    random_btn: '🎲 Random',
+    play_all: '▶ Play all',
+    saved_stations: '💾 Saved stations',
+    radio_search_ph: 'Search stations (e.g. jazz, BBC, NPR)…',
+    skin_search_ph: 'Search skins (e.g. matrix, simpsons, eminem)…',
+    all_countries: 'All countries',
+    country_RS: 'Serbia', country_HR: 'Croatia', country_BA: 'BiH',
+    country_ME: 'Montenegro', country_MK: 'N. Macedonia', country_SI: 'Slovenia',
+    country_US: 'USA', country_GB: 'UK', country_DE: 'Germany',
+    country_FR: 'France', country_IT: 'Italy', country_ES: 'Spain',
+    radio_hint: 'Search or pick a genre.',
+    skin_hint: 'Search via skins.webamp.org (Algolia). Or tap „Random".',
+    file_drop_text: 'Pick MP3 / OGG / WAV / M4A files from your phone',
+    file_drop_sub: 'Tap here or drop files',
+    swipe_hint: '⇆ skin   ↓ EQ+playlist   ↑ minimal',
+    about_p1: 'Classic player look in the browser, via the <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a> library by Jordan Eldredge / captbaritone, which re-implements the Winamp 2 player. Installable on Android: launch from home screen, rotate, full screen.',
+    about_disclaimer: 'Not officially affiliated with Winamp or Llama Group SA. „Winamp" is a registered trademark — used here only descriptively (Webamp re-implements the Winamp 2 look).',
+    about_radio_t: 'Radio',
+    about_radio_d: '— via <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>, ~30k stations',
+    about_skins_t: 'Skins',
+    about_skins_d: '— via <a href="https://skins.webamp.org" target="_blank" rel="noopener">skins.webamp.org</a>, 65k+ classic .wsz files',
+    about_files_t: 'Local files',
+    about_files_d: '— MP3/OGG/WAV/M4A from your phone',
+    about_swipe_t: 'Swipe left/right',
+    about_swipe_d: 'on Webamp window switches the skin (once a gallery is loaded)',
+    about_offline_t: 'Offline',
+    about_offline_d: '— shell + loaded skins are cached (Service Worker)',
+    about_credits: 'Webamp library by <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Jordan Eldredge (captbaritone)</a>.',
+    clear_cache_btn: 'Clear cache',
+    clear_playlist_btn: 'Clear saved playlist',
+    // Dynamic JS messages
+    searching: 'Searching…',
+    no_results: 'No results.',
+    no_skins: 'No skins.',
+    loading_skin: 'Loading skin…',
+    skin_load_error: 'Failed to load skin',
+    error_prefix: 'Error: ',
+    starting_prefix: 'Starting: ',
+    starting_n_stations: 'Starting {n} stations…',
+    no_audio_selected: 'No audio file selected',
+    playlist_cleared: 'Playlist cleared.',
+    clear_cache_confirm: 'Clear cache and reload?',
+    clear_playlist_confirm: 'Clear saved playlist?',
+    new_version_prompt: 'A new version is available. Reload?',
+    nothing_to_share: 'Nothing to share yet — pick a skin or station first.',
+    url_copied: 'URL copied to clipboard ✓',
+    copy_url_label: 'Copy URL:',
+    install_ios_help: 'Safari (iOS): Share (□↑) → „Add to Home Screen" → „Add".',
+    install_android_help: 'Chrome (Android): menu (⋮) → „Install app" / „Add to Home screen".',
+  },
+  sr: {
+    install_btn: '⬇ Instaliraj',
+    fullscreen_btn: '⛶ Fullscreen',
+    tab_radio: '📻 Radio',
+    tab_skins: '🎨 Skinovi',
+    tab_files: '📁 Fajlovi',
+    tab_about: 'ℹ️ O aplikaciji',
+    search_btn: 'Traži',
+    random_btn: '🎲 Slučajno',
+    play_all: '▶ Pusti sve',
+    saved_stations: '💾 Sačuvane stanice',
+    radio_search_ph: 'Pretraga stanica (npr. jazz, beograd, BBC)…',
+    skin_search_ph: 'Pretraga skinova (npr. matrix, simpsons, eminem)…',
+    all_countries: 'Sve zemlje',
+    country_RS: 'Srbija', country_HR: 'Hrvatska', country_BA: 'BiH',
+    country_ME: 'Crna Gora', country_MK: 'Makedonija', country_SI: 'Slovenija',
+    country_US: 'SAD', country_GB: 'UK', country_DE: 'Nemačka',
+    country_FR: 'Francuska', country_IT: 'Italija', country_ES: 'Španija',
+    radio_hint: 'Pretraži ili izaberi žanr.',
+    skin_hint: 'Pretraga preko skins.webamp.org (Algolia). Ili klikni „Slučajno".',
+    file_drop_text: 'Izaberi MP3 / OGG / WAV / M4A fajlove sa telefona',
+    file_drop_sub: 'Tap ovde ili prevuci fajlove',
+    swipe_hint: '⇆ skin   ↓ EQ+playlist   ↑ minimal',
+    about_p1: 'Klasični player look u browseru, preko <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a> biblioteke (Jordan Eldredge / captbaritone) koja reimplementira Winamp 2 player. Instalabilna PWA na Android-u: pokreni iz home screen-a, okreni telefon, ceo ekran.',
+    about_disclaimer: 'Nije zvanično povezan sa Winamp-om niti Llama Group SA. „Winamp" je registrovan trademark — ovde koristim samo deskriptivno (Webamp emulira izgled Winamp-a 2).',
+    about_radio_t: 'Radio',
+    about_radio_d: '— preko <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>, ~30k stanica',
+    about_skins_t: 'Skinovi',
+    about_skins_d: '— preko <a href="https://skins.webamp.org" target="_blank" rel="noopener">skins.webamp.org</a>, 65k+ klasičnih .wsz fajlova',
+    about_files_t: 'Lokalni fajlovi',
+    about_files_d: '— MP3/OGG/WAV/M4A sa telefona',
+    about_swipe_t: 'Swipe levo/desno',
+    about_swipe_d: 'na Webamp prozoru menja skin (kad se učita galerija)',
+    about_offline_t: 'Offline',
+    about_offline_d: '— shell + jednom učitani skinovi se kešuju (Service Worker)',
+    about_credits: 'Webamp biblioteka — <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Jordan Eldredge (captbaritone)</a>.',
+    clear_cache_btn: 'Očisti keš',
+    clear_playlist_btn: 'Očisti sačuvanu playlistu',
+    searching: 'Pretraga…',
+    no_results: 'Nema rezultata.',
+    no_skins: 'Nema skinova.',
+    loading_skin: 'Učitavam skin…',
+    skin_load_error: 'Greška pri učitavanju skina',
+    error_prefix: 'Greška: ',
+    starting_prefix: 'Pokrećem: ',
+    starting_n_stations: 'Pokrećem {n} stanica…',
+    no_audio_selected: 'Nijedan audio fajl nije izabran',
+    playlist_cleared: 'Playlist obrisana.',
+    clear_cache_confirm: 'Obrisati keš i osvežiti stranicu?',
+    clear_playlist_confirm: 'Obrisati sačuvanu playlistu?',
+    new_version_prompt: 'Nova verzija je dostupna. Osvežiti?',
+    nothing_to_share: 'Nema čega za deljenje — izaberi prvo skin ili stanicu.',
+    url_copied: 'URL kopiran u clipboard ✓',
+    copy_url_label: 'Kopiraj URL:',
+    install_ios_help: 'Safari (iOS): Share (□↑) → „Add to Home Screen" → „Add".',
+    install_android_help: 'Chrome (Android): meni (⋮) → „Install app" / „Add to Home screen".',
+  },
+};
+
+const LS_LANG = 'webamp_lang';
+let currentLang = (function () {
+  const saved = localStorage.getItem(LS_LANG);
+  if (saved && I18N[saved]) return saved;
+  return 'en';
+})();
+
+function t(key, params) {
+  const dict = I18N[currentLang] || I18N.en;
+  let s = (dict[key] != null ? dict[key] : (I18N.en[key] != null ? I18N.en[key] : key));
+  if (params) {
+    for (const [k, v] of Object.entries(params)) s = s.replace(`{${k}}`, v);
+  }
+  return s;
+}
+
+function applyI18n() {
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    const attr = el.getAttribute('data-i18n-attr');
+    const html = el.hasAttribute('data-i18n-html');
+    const val = t(key);
+    if (attr) el.setAttribute(attr, val);
+    else if (html) el.innerHTML = val;
+    else el.textContent = val;
+  });
+}
+
 // ── Config ──
 const ALGOLIA_APP_ID = 'HQ9I5Z6IM5';
 const ALGOLIA_API_KEY = '6466695ec3f624a5fccf46ec49680e51';
@@ -102,6 +250,21 @@ const playerView = $('playerView');
 const statusMsg = $('statusMsg');
 const swipeHint = $('swipeHint');
 
+// ── Language selector ──
+const _langSelect = document.getElementById('langSelect');
+if (_langSelect) {
+  _langSelect.value = currentLang;
+  _langSelect.addEventListener('change', () => {
+    currentLang = _langSelect.value;
+    localStorage.setItem(LS_LANG, currentLang);
+    applyI18n();
+    // Re-render dynamic results that include translated strings
+    if (typeof renderSavedStations === 'function') renderSavedStations();
+  });
+}
+// Apply translations on initial load
+applyI18n();
+
 // ── Tabs ──
 document.querySelectorAll('.tab').forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -145,7 +308,7 @@ function renderStations(stations) {
   const grid = $('radioResults');
   grid.innerHTML = '';
   if (!stations || !stations.length) {
-    grid.innerHTML = '<div class="hint">Nema rezultata.</div>';
+    grid.innerHTML = `<div class="hint">${escHtml(t('no_results'))}</div>`;
     return;
   }
   for (const s of stations) {
@@ -170,12 +333,12 @@ function renderStations(stations) {
 
 async function doRadioSearch(q, country, tag) {
   const grid = $('radioResults');
-  grid.innerHTML = '<div class="hint"><span class="spinner"></span>Pretraga…</div>';
+  grid.innerHTML = `<div class="hint"><span class="spinner"></span>${escHtml(t('searching'))}</div>`;
   try {
     const stations = await searchRadio({ q, country, tag });
     renderStations(stations);
   } catch (e) {
-    grid.innerHTML = `<div class="hint">Greška: ${escHtml(e.message)}</div>`;
+    grid.innerHTML = `<div class="hint">${escHtml(t('error_prefix'))}${escHtml(e.message)}</div>`;
   }
 }
 
@@ -216,7 +379,7 @@ $('btnPlayAllSaved').addEventListener('click', () => {
   } else {
     webamp.setTracksToPlay(list);
   }
-  showMsg(`Pokrećem ${list.length} stanica…`, 'info', 2500);
+  showMsg(t('starting_n_stations', { n: list.length }), 'info', 2500);
   showPlayerView();
 });
 $('radioSearch').addEventListener('keydown', (e) => {
@@ -291,7 +454,7 @@ function renderSkins(skins) {
   grid.innerHTML = '';
   skinGallery = skins;
   if (!skins.length) {
-    grid.innerHTML = '<div class="hint">Nema skinova.</div>';
+    grid.innerHTML = `<div class="hint">${escHtml(t('no_skins'))}</div>`;
     return;
   }
   skins.forEach((s, idx) => {
@@ -311,12 +474,12 @@ function renderSkins(skins) {
 
 async function doSkinSearch(q) {
   const grid = $('skinResults');
-  grid.innerHTML = '<div class="hint"><span class="spinner"></span>Pretraga…</div>';
+  grid.innerHTML = `<div class="hint"><span class="spinner"></span>${escHtml(t('searching'))}</div>`;
   try {
     const skins = q ? await searchSkins(q) : await randomSkins();
     renderSkins(skins);
   } catch (e) {
-    grid.innerHTML = `<div class="hint">Greška: ${escHtml(e.message)}</div>`;
+    grid.innerHTML = `<div class="hint">${escHtml(t('error_prefix'))}${escHtml(e.message)}</div>`;
   }
 }
 
@@ -526,7 +689,7 @@ async function applySkinByMd5(md5, fileName) {
     showPlayerView();
     return;
   }
-  showMsg('Učitavam skin…', 'info', 1500);
+  showMsg(t('loading_skin'), 'info', 1500);
   // Always open player view — without this, picking a skin from the launcher
   // when Webamp already exists silently changes the skin in the background.
   showPlayerView();
@@ -541,7 +704,7 @@ async function applySkinByMd5(md5, fileName) {
     setTimeout(applyWebampScale, 80);
     hideMsg();
   } catch (e) {
-    showMsg('Greška pri učitavanju skina', 'error');
+    showMsg(t('skin_load_error'), 'error');
   }
 }
 
@@ -628,7 +791,7 @@ function playRadio(url, name) {
   } else {
     webamp.setTracksToPlay([track]);
   }
-  showMsg('Starting: ' + name, 'info', 2500);
+  showMsg(t('starting_prefix') + name, 'info', 2500);
   showPlayerView();
 }
 
@@ -680,7 +843,7 @@ function loadFiles(fileList) {
     tracks.push({ url, defaultName: f.name, blob: f });
   }
   if (!tracks.length) {
-    showMsg('Nijedan audio fajl nije izabran', 'error');
+    showMsg(t('no_audio_selected'), 'error');
     return;
   }
   renderFileList(tracks);
@@ -743,9 +906,7 @@ btnInstall.addEventListener('click', async () => {
     return;
   }
   const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  alert(isIos
-    ? 'Safari (iOS): Share (□↑) → „Add to Home Screen" → „Add".'
-    : 'Chrome (Android): meni (⋮) → „Install app" / „Add to Home screen".');
+  alert(isIos ? t('install_ios_help') : t('install_android_help'));
 });
 
 window.addEventListener('appinstalled', () => btnInstall.classList.add('hidden'));
@@ -760,7 +921,7 @@ if ('serviceWorker' in navigator) {
         // assets instead of one-version-stale stale-while-revalidate cache.
         if (!reg) return;
         const promptReload = () => {
-          if (confirm('Nova verzija je dostupna. Osvežiti?')) location.reload();
+          if (confirm(t('new_version_prompt'))) location.reload();
         };
         if (reg.waiting) promptReload();
         reg.addEventListener('updatefound', () => {
@@ -778,14 +939,14 @@ if ('serviceWorker' in navigator) {
 }
 
 $('btnClearPlaylist').addEventListener('click', () => {
-  if (!confirm('Obrisati sačuvanu playlistu?')) return;
+  if (!confirm(t('clear_playlist_confirm'))) return;
   clearStoredPlaylist();
   renderSavedStations();
-  showMsg('Playlist obrisana.', 'success', 2000);
+  showMsg(t('playlist_cleared'), 'success', 2000);
 });
 
 $('btnClearCache').addEventListener('click', async () => {
-  if (!confirm('Obrisati keš i osvežiti stranicu?')) return;
+  if (!confirm(t('clear_cache_confirm'))) return;
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_CACHE' });
     setTimeout(() => location.reload(), 500);
@@ -809,7 +970,7 @@ function flagEmoji(code) {
 async function shareCurrent() {
   rebuildHash();
   if (!currentSkin && !lastStreamTrack) {
-    showMsg('Nothing to share yet — pick a skin or station first.', 'info');
+    showMsg(t('nothing_to_share'), 'info');
     return;
   }
   const url = location.href;
@@ -830,9 +991,9 @@ async function shareCurrent() {
   }
   try {
     await navigator.clipboard.writeText(url);
-    showMsg('URL copied to clipboard ✓', 'success');
+    showMsg(t('url_copied'), 'success');
   } catch (_) {
-    prompt('Copy URL:', url);
+    prompt(t('copy_url_label'), url);
   }
 }
 // Share drawer wiring

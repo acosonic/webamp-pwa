@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -41,38 +41,42 @@
       <h1>Webamp</h1>
     </div>
     <div class="launcher-actions">
-      <button id="btnInstall" class="btn btn-install hidden">⬇ Instaliraj</button>
-      <button id="btnFullscreen" class="btn">⛶ Fullscreen</button>
+      <select id="langSelect" class="lang-select" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="sr">SR</option>
+      </select>
+      <button id="btnInstall" class="btn btn-install hidden" data-i18n="install_btn">⬇ Install</button>
+      <button id="btnFullscreen" class="btn" data-i18n="fullscreen_btn">⛶ Fullscreen</button>
     </div>
   </header>
 
   <nav class="tabs" role="tablist">
-    <button class="tab active" data-tab="radio" role="tab">📻 Radio</button>
-    <button class="tab" data-tab="skins" role="tab">🎨 Skinovi</button>
-    <button class="tab" data-tab="files" role="tab">📁 Fajlovi</button>
-    <button class="tab" data-tab="about" role="tab">ℹ️ O aplikaciji</button>
+    <button class="tab active" data-tab="radio" role="tab" data-i18n="tab_radio">📻 Radio</button>
+    <button class="tab" data-tab="skins" role="tab" data-i18n="tab_skins">🎨 Skins</button>
+    <button class="tab" data-tab="files" role="tab" data-i18n="tab_files">📁 Files</button>
+    <button class="tab" data-tab="about" role="tab" data-i18n="tab_about">ℹ️ About</button>
   </nav>
 
   <!-- Radio tab -->
   <section id="tab-radio" class="tab-panel active">
     <div class="search-row">
-      <input type="text" id="radioSearch" placeholder="Pretraga stanica (npr. jazz, beograd, BBC)…" autocomplete="off">
+      <input type="text" id="radioSearch" data-i18n-attr="placeholder" data-i18n="radio_search_ph" placeholder="Search stations (e.g. jazz, BBC, NPR)…" autocomplete="off">
       <select id="radioCountry">
-        <option value="">Sve zemlje</option>
-        <option value="RS">Srbija</option>
-        <option value="HR">Hrvatska</option>
-        <option value="BA">BiH</option>
-        <option value="ME">Crna Gora</option>
-        <option value="MK">Makedonija</option>
-        <option value="SI">Slovenija</option>
-        <option value="US">SAD</option>
-        <option value="GB">UK</option>
-        <option value="DE">Nemačka</option>
-        <option value="FR">Francuska</option>
-        <option value="IT">Italija</option>
-        <option value="ES">Španija</option>
+        <option value="" data-i18n="all_countries">All countries</option>
+        <option value="RS" data-i18n="country_RS">Serbia</option>
+        <option value="HR" data-i18n="country_HR">Croatia</option>
+        <option value="BA" data-i18n="country_BA">BiH</option>
+        <option value="ME" data-i18n="country_ME">Montenegro</option>
+        <option value="MK" data-i18n="country_MK">N. Macedonia</option>
+        <option value="SI" data-i18n="country_SI">Slovenia</option>
+        <option value="US" data-i18n="country_US">USA</option>
+        <option value="GB" data-i18n="country_GB">UK</option>
+        <option value="DE" data-i18n="country_DE">Germany</option>
+        <option value="FR" data-i18n="country_FR">France</option>
+        <option value="IT" data-i18n="country_IT">Italy</option>
+        <option value="ES" data-i18n="country_ES">Spain</option>
       </select>
-      <button id="radioSearchBtn" class="btn btn-primary">Traži</button>
+      <button id="radioSearchBtn" class="btn btn-primary" data-i18n="search_btn">Search</button>
     </div>
     <div class="chip-row" id="radioChips">
       <button class="chip" data-tag="pop">Pop</button>
@@ -90,24 +94,24 @@
     </div>
     <div id="savedStations" class="saved-stations hidden">
       <div class="saved-header">
-        <span class="saved-title">💾 Sačuvane stanice</span>
-        <button id="btnPlayAllSaved" class="btn">▶ Pusti sve</button>
+        <span class="saved-title" data-i18n="saved_stations">💾 Saved stations</span>
+        <button id="btnPlayAllSaved" class="btn" data-i18n="play_all">▶ Play all</button>
       </div>
       <div id="savedStationsList" class="saved-list"></div>
     </div>
     <div id="radioResults" class="list-grid">
-      <div class="hint">Pretraži ili izaberi žanr.</div>
+      <div class="hint" data-i18n="radio_hint">Search or pick a genre.</div>
     </div>
   </section>
 
   <!-- Skins tab -->
   <section id="tab-skins" class="tab-panel">
     <div class="search-row">
-      <input type="text" id="skinSearch" placeholder="Pretraga skinova (npr. matrix, simpsons, eminem)…" autocomplete="off">
-      <button id="skinSearchBtn" class="btn btn-primary">Traži</button>
-      <button id="skinRandomBtn" class="btn">🎲 Slučajno</button>
+      <input type="text" id="skinSearch" data-i18n-attr="placeholder" data-i18n="skin_search_ph" placeholder="Search skins (e.g. matrix, simpsons, eminem)…" autocomplete="off">
+      <button id="skinSearchBtn" class="btn btn-primary" data-i18n="search_btn">Search</button>
+      <button id="skinRandomBtn" class="btn" data-i18n="random_btn">🎲 Random</button>
     </div>
-    <div class="hint" id="skinHint">Pretraga preko skins.webamp.org (Algolia). Ili klikni „Slučajno".</div>
+    <div class="hint" id="skinHint" data-i18n="skin_hint">Search via skins.webamp.org (Algolia). Or tap „Random".</div>
     <div id="skinResults" class="skin-grid"></div>
   </section>
 
@@ -116,8 +120,8 @@
     <div class="files-zone">
       <label class="file-drop" for="fileInput">
         <div class="file-drop-icon">📁</div>
-        <div class="file-drop-text">Izaberi MP3 / OGG / WAV / M4A fajlove sa telefona</div>
-        <div class="file-drop-sub">Tap ovde ili prevuci fajlove</div>
+        <div class="file-drop-text" data-i18n="file_drop_text">Pick MP3 / OGG / WAV / M4A files from your phone</div>
+        <div class="file-drop-sub" data-i18n="file_drop_sub">Tap here or drop files</div>
         <input type="file" id="fileInput" accept="audio/*" multiple hidden>
       </label>
       <div id="fileList" class="file-list"></div>
@@ -128,19 +132,19 @@
   <section id="tab-about" class="tab-panel">
     <div class="about-body">
       <h2>Webamp PWA</h2>
-      <p>Klasični player look u browseru (preko <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a> biblioteke koja reimplementira Winamp 2 — Jordan Eldredge / captbaritone). Radi kao instalabilna PWA na Android-u: pokreni iz home screen-a, okreni telefon u landscape, ceo ekran.</p>
-      <p class="muted" style="font-size:11px">Nije zvanično povezan sa Winamp-om niti Llama Group SA. Naziv „Winamp" je registrovan trademark — ovde koristim samo deskriptivno (Webamp emulira izgled Winamp-a 2).</p>
-      <ul>
-        <li><strong>Radio</strong> — preko <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>, ~30k stanica</li>
-        <li><strong>Skinovi</strong> — preko <a href="https://skins.webamp.org" target="_blank" rel="noopener">skins.webamp.org</a>, 65k+ klasičnih .wsz fajlova</li>
-        <li><strong>Lokalni fajlovi</strong> — MP3/OGG/WAV/M4A sa telefona</li>
-        <li><strong>Swipe levo/desno</strong> na Webamp prozoru menja skin (kad ih učitaš)</li>
-        <li><strong>Offline</strong> — jednom učitani skinovi i shell se kešuju (Service Worker)</li>
+      <p data-i18n="about_p1" data-i18n-html>Classic player look in the browser, via the <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a> library by Jordan Eldredge / captbaritone, which re-implements the Winamp 2 player. Installable on Android: launch from home screen, rotate, full screen.</p>
+      <p class="muted" data-i18n="about_disclaimer" style="font-size:11px">Not officially affiliated with Winamp or Llama Group SA. „Winamp" is a registered trademark — used here only descriptively (Webamp re-implements the Winamp 2 look).</p>
+      <ul id="aboutFeatures">
+        <li><strong data-i18n="about_radio_t">Radio</strong> <span data-i18n="about_radio_d">— via <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>, ~30k stations</span></li>
+        <li><strong data-i18n="about_skins_t">Skins</strong> <span data-i18n="about_skins_d">— via <a href="https://skins.webamp.org" target="_blank" rel="noopener">skins.webamp.org</a>, 65k+ classic .wsz files</span></li>
+        <li><strong data-i18n="about_files_t">Local files</strong> <span data-i18n="about_files_d">— MP3/OGG/WAV/M4A from your phone</span></li>
+        <li><strong data-i18n="about_swipe_t">Swipe left/right</strong> <span data-i18n="about_swipe_d">on Webamp window switches the skin (once a gallery is loaded)</span></li>
+        <li><strong data-i18n="about_offline_t">Offline</strong> <span data-i18n="about_offline_d">— shell + loaded skins are cached (Service Worker)</span></li>
       </ul>
-      <p class="muted">Webamp library by <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Jordan Eldredge (captbaritone)</a>.</p>
+      <p class="muted" data-i18n="about_credits" data-i18n-html>Webamp library by <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Jordan Eldredge (captbaritone)</a>.</p>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px">
-        <button id="btnClearCache" class="btn">Očisti keš</button>
-        <button id="btnClearPlaylist" class="btn">Očisti sačuvanu playlistu</button>
+        <button id="btnClearCache" class="btn" data-i18n="clear_cache_btn">Clear cache</button>
+        <button id="btnClearPlaylist" class="btn" data-i18n="clear_playlist_btn">Clear saved playlist</button>
       </div>
     </div>
   </section>
@@ -168,7 +172,7 @@
     </div>
     <button id="shareHandle" class="share-handle" title="Share" aria-label="Open share drawer">⌃</button>
   </div>
-  <div class="swipe-hint" id="swipeHint">⇆ skin   ↓ EQ+playlist   ↑ minimal</div>
+  <div class="swipe-hint" id="swipeHint" data-i18n="swipe_hint">⇆ skin   ↓ EQ+playlist   ↑ minimal</div>
 </div>
 
 <script src="vendor_js/webamp.bundle.min.js"></script>

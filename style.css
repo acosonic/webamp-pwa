@@ -64,7 +64,18 @@ button { font: inherit; }
 }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand h1 { margin: 0; font-size: 18px; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; }
-.launcher-actions { display: flex; gap: 8px; }
+.launcher-actions { display: flex; gap: 8px; align-items: center; }
+
+.lang-select {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.lang-select:focus { outline: none; border-color: var(--accent); }
 
 .btn {
   background: var(--bg3);
