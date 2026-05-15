@@ -1,0 +1,10 @@
+.DS_Store
+*.bak
+_old/
+_*.html
+_*.jpg
+_*.png
+_master.png
+
+# Claude Code local session settings — do not push
+.claude/

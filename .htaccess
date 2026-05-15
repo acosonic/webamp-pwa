@@ -1,0 +1,19 @@
+DirectoryIndex index.html
+
+<IfModule mod_headers.c>
+    <Files "service-worker.js">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </Files>
+    <Files "manifest.json">
+        Header set Cache-Control "no-cache"
+    </Files>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "same-origin"
+    # Don't pin localhost to HTTPS — the global Apache config sets HSTS for
+    # all responses, which breaks self-signed-cert dev workflows. Unset here.
+    Header always unset Strict-Transport-Security
+</IfModule>
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

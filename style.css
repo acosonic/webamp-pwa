@@ -1,0 +1,443 @@
+:root {
+  --bg: #0a0a0a;
+  --bg2: #1a1a1a;
+  --bg3: #2a2a2a;
+  --fg: #e6e6e6;
+  --fg2: #9a9a9a;
+  --accent: #f0b400;
+  --accent2: #39ff14;
+  --danger: #e84040;
+  --border: #333;
+}
+
+* { box-sizing: border-box; }
+
+html {
+  background: #010101 !important;
+}
+html, body {
+  margin: 0; padding: 0;
+  height: 100%;
+  background: #010101;
+  color: var(--fg);
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: contain;
+}
+
+/* Push launcher content below the status bar (which black-translucent leaves
+   transparent so our content extends edge-to-edge). Player view fills the
+   full viewport edge-to-edge — system icons render over our black bg. */
+.launcher {
+  padding-top: calc(12px + env(safe-area-inset-top, 0)) !important;
+}
+
+body {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+a { color: var(--accent); }
+
+button { font: inherit; }
+
+.hidden { display: none !important; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Launcher ── */
+.launcher {
+  display: flex; flex-direction: column;
+  height: 100%;
+  padding: 12px;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.launcher-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand h1 { margin: 0; font-size: 18px; color: var(--accent); font-weight: 700; letter-spacing: 0.5px; }
+.launcher-actions { display: flex; gap: 8px; }
+
+.btn {
+  background: var(--bg3);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background .15s, border-color .15s;
+}
+.btn:hover, .btn:active { background: #3a3a3a; border-color: #555; }
+.btn-primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+.btn-primary:hover { background: #ffc820; }
+.btn-install { background: var(--accent2); color: #000; border-color: var(--accent2); font-weight: 600; }
+
+.tabs {
+  display: flex; gap: 4px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  background: transparent;
+  color: var(--fg2);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.tab.active { background: var(--bg2); color: var(--fg); border-color: var(--accent); }
+
+.tab-panel {
+  display: none;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  gap: 10px;
+}
+.tab-panel.active { display: flex; }
+
+.search-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.search-row input[type="text"], .search-row select {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 8px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  border-radius: 6px;
+  font-size: 14px;
+}
+.search-row input:focus, .search-row select:focus { outline: none; border-color: var(--accent); }
+
+.saved-stations {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  padding: 8px 10px;
+  flex-shrink: 0;
+}
+.saved-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.saved-title { font-size: 13px; color: var(--accent); font-weight: 600; }
+.saved-list {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  max-height: 90px; overflow-y: auto;
+}
+.saved-chip {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+  max-width: 220px;
+}
+.saved-chip:hover { background: #3a3a3a; border-color: var(--accent); }
+.saved-chip .x {
+  opacity: 0.6;
+  padding: 0 2px;
+  font-size: 11px;
+}
+.saved-chip .x:hover { opacity: 1; color: var(--danger); }
+
+.chip-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.chip {
+  background: var(--bg2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.chip:hover, .chip.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+.hint, .muted {
+  color: var(--fg2);
+  font-size: 13px;
+  padding: 4px;
+}
+
+/* ── Lists / grids ── */
+.list-grid {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+  padding-right: 4px;
+}
+.station-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  gap: 6px;
+  transition: border-color .15s, background .15s;
+}
+.station-card:hover, .station-card:active { border-color: var(--accent); background: #222; }
+.station-card .name {
+  font-weight: 600; font-size: 14px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.station-card .meta {
+  font-size: 11px; color: var(--fg2);
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.station-card .tag {
+  background: var(--bg3); padding: 2px 6px; border-radius: 3px;
+}
+
+.skin-grid {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  padding-right: 4px;
+}
+.skin-card {
+  background: var(--bg2);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  /* Match the screenshot aspect (main 116 + EQ 116 + playlist 116 = 348) so
+     the whole skin is visible, not just the equalizer strip in the middle. */
+  aspect-ratio: 275/348;
+  transition: border-color .15s, transform .1s;
+}
+.skin-card:hover, .skin-card.active { border-color: var(--accent); }
+.skin-card.active { box-shadow: 0 0 0 2px var(--accent); }
+.skin-card img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block;
+  image-rendering: pixelated;
+}
+.skin-card .skin-name {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.75);
+  padding: 4px 8px;
+  font-size: 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Files tab ── */
+.files-zone {
+  display: flex; flex-direction: column; gap: 12px;
+  flex: 1 1 auto; min-height: 0;
+}
+.file-drop {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--bg2);
+  text-align: center;
+}
+.file-drop:hover { border-color: var(--accent); }
+.file-drop-icon { font-size: 36px; }
+.file-drop-text { font-weight: 600; }
+.file-drop-sub { color: var(--fg2); font-size: 12px; }
+
+.file-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.file-row {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex; gap: 8px; align-items: center;
+}
+.file-row .file-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── About ── */
+.about-body {
+  overflow-y: auto;
+  padding: 8px;
+}
+.about-body h2 { margin-top: 0; color: var(--accent); }
+.about-body ul { padding-left: 20px; }
+.about-body li { margin: 6px 0; }
+
+/* ── Status message ── */
+.status-msg {
+  position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  z-index: 100;
+  max-width: 80%;
+  text-align: center;
+}
+.status-msg.error { border-color: var(--danger); color: #ffaaaa; }
+.status-msg.success { border-color: var(--accent2); color: var(--accent2); }
+.status-msg.info { border-color: var(--accent); color: var(--accent); }
+
+/* ── Player view ── */
+.player-view {
+  position: fixed; inset: 0;
+  background: #010101;
+  z-index: 50;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Webamp host: container for #webamp (moved here by JS after render).
+   Fills the viewport. JS applies absolute positioning + scale on #webamp. */
+.webamp-host {
+  position: absolute;
+  inset: 0;
+  z-index: 55;
+}
+
+/* Minimal mode: only main window visible, scaled up to fill viewport.
+   Default state on entering player view. Swipe ↓ toggles to full mode.
+   Sub-modes (toggled by tapping EQ / PL buttons inside main window):
+     view-eq → show equalizer-window instead of main
+     view-pl → show playlist-window instead of main */
+.player-view.minimal #equalizer-window,
+.player-view.minimal #playlist-window {
+  display: none !important;
+}
+.player-view.minimal.view-eq #main-window,
+.player-view.minimal.view-eq #playlist-window {
+  display: none !important;
+}
+.player-view.minimal.view-eq #equalizer-window {
+  display: block !important;
+}
+.player-view.minimal.view-pl #main-window,
+.player-view.minimal.view-pl #equalizer-window {
+  display: none !important;
+}
+.player-view.minimal.view-pl #playlist-window {
+  display: flex !important;
+}
+
+/* JS handles #webamp's position/transform/zIndex once rendered. */
+
+.swipe-hint {
+  position: fixed;
+  bottom: 8px; left: 50%; transform: translateX(-50%);
+  background: rgba(20,20,20,0.7);
+  padding: 6px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  color: var(--fg2);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.5s;
+  z-index: 100;
+}
+.swipe-hint.faded { opacity: 0; }
+
+/* Top-left share drawer.
+   Collapsed: small ⌄ chevron tucked in the top-left corner — barely visible.
+   Expanded: a small horizontal panel slides out with share + close. */
+.share-drawer {
+  position: fixed;
+  left: 6px; top: 6px;
+  z-index: 110;
+  display: flex; flex-direction: row; align-items: center;
+}
+.share-handle {
+  width: 28px; height: 28px;
+  background: rgba(20,20,20,0.5);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  padding: 0;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: background .15s, color .15s;
+}
+.share-handle:hover, .share-handle:active {
+  background: rgba(40,40,40,0.85);
+  color: var(--fg);
+}
+.share-panel {
+  display: none;
+  flex-direction: row;
+  gap: 6px;
+  padding: 5px;
+  background: rgba(20,20,20,0.88);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.share-drawer.open .share-panel { display: flex; }
+.share-drawer.open .share-handle { display: none; }
+.share-btn {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  font-size: 14px;
+}
+.share-btn:hover, .share-btn:active {
+  background: #3a3a3a; border-color: var(--accent);
+}
+.share-btn-sm { width: 24px; height: 24px; font-size: 12px; }
+
+/* ── Landscape phone optimizations ── */
+@media (orientation: landscape) and (max-height: 500px) {
+  .launcher { padding: 8px; gap: 8px; }
+  .launcher-header { padding-bottom: 6px; }
+  .brand h1 { font-size: 16px; }
+  .tab { padding: 6px 10px; font-size: 12px; }
+  .list-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .skin-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+}
+
+/* ── Loading spinner ── */
+.spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}

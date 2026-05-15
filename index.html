@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Webamp</title>
+<meta name="theme-color" content="#010101">
+<meta name="description" content="Klasični player look u pretraživaču — radio, skinovi, lokalni MP3-ovi. Instalabilan kao PWA na Android. Built on Webamp library.">
+
+<!-- Open Graph / Twitter — link preview u Slack/WhatsApp/Telegram/Viber/X -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Webamp PWA">
+<meta property="og:description" content="Klasični player look u browseru — radio iz Radio Browser-a, skinovi sa skins.webamp.org, lokalni MP3-ovi.">
+<meta property="og:url" content="https://acosonic.com/projects/webamp-pwa/">
+<meta property="og:image" content="https://acosonic.com/projects/webamp-pwa/icons/icon-512.png">
+<meta property="og:image:width" content="512">
+<meta property="og:image:height" content="512">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Webamp PWA">
+<meta name="twitter:description" content="Klasični player look u browseru — radio, skinovi, MP3-ovi.">
+<meta name="twitter:image" content="https://acosonic.com/projects/webamp-pwa/icons/icon-512.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Webamp">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-96x96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Launcher (visible when no track loaded yet) -->
+<div id="launcher" class="launcher">
+  <header class="launcher-header">
+    <div class="brand">
+      <img src="favicon.svg" alt="" width="32" height="32">
+      <h1>Webamp</h1>
+    </div>
+    <div class="launcher-actions">
+      <button id="btnInstall" class="btn btn-install hidden">⬇ Instaliraj</button>
+      <button id="btnFullscreen" class="btn">⛶ Fullscreen</button>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="radio" role="tab">📻 Radio</button>
+    <button class="tab" data-tab="skins" role="tab">🎨 Skinovi</button>
+    <button class="tab" data-tab="files" role="tab">📁 Fajlovi</button>
+    <button class="tab" data-tab="about" role="tab">ℹ️ O aplikaciji</button>
+  </nav>
+
+  <!-- Radio tab -->
+  <section id="tab-radio" class="tab-panel active">
+    <div class="search-row">
+      <input type="text" id="radioSearch" placeholder="Pretraga stanica (npr. jazz, beograd, BBC)…" autocomplete="off">
+      <select id="radioCountry">
+        <option value="">Sve zemlje</option>
+        <option value="RS">Srbija</option>
+        <option value="HR">Hrvatska</option>
+        <option value="BA">BiH</option>
+        <option value="ME">Crna Gora</option>
+        <option value="MK">Makedonija</option>
+        <option value="SI">Slovenija</option>
+        <option value="US">SAD</option>
+        <option value="GB">UK</option>
+        <option value="DE">Nemačka</option>
+        <option value="FR">Francuska</option>
+        <option value="IT">Italija</option>
+        <option value="ES">Španija</option>
+      </select>
+      <button id="radioSearchBtn" class="btn btn-primary">Traži</button>
+    </div>
+    <div class="chip-row" id="radioChips">
+      <button class="chip" data-tag="pop">Pop</button>
+      <button class="chip" data-tag="rock">Rock</button>
+      <button class="chip" data-tag="jazz">Jazz</button>
+      <button class="chip" data-tag="electronic">Electronic</button>
+      <button class="chip" data-tag="metal">Metal</button>
+      <button class="chip" data-tag="classical">Classical</button>
+      <button class="chip" data-tag="news">News</button>
+      <button class="chip" data-tag="80s">80s</button>
+      <button class="chip" data-tag="90s">90s</button>
+      <button class="chip" data-tag="folk">Folk</button>
+      <button class="chip" data-tag="latin">Latin</button>
+      <button class="chip" data-tag="reggae">Reggae</button>
+    </div>
+    <div id="savedStations" class="saved-stations hidden">
+      <div class="saved-header">
+        <span class="saved-title">💾 Sačuvane stanice</span>
+        <button id="btnPlayAllSaved" class="btn">▶ Pusti sve</button>
+      </div>
+      <div id="savedStationsList" class="saved-list"></div>
+    </div>
+    <div id="radioResults" class="list-grid">
+      <div class="hint">Pretraži ili izaberi žanr.</div>
+    </div>
+  </section>
+
+  <!-- Skins tab -->
+  <section id="tab-skins" class="tab-panel">
+    <div class="search-row">
+      <input type="text" id="skinSearch" placeholder="Pretraga skinova (npr. matrix, simpsons, eminem)…" autocomplete="off">
+      <button id="skinSearchBtn" class="btn btn-primary">Traži</button>
+      <button id="skinRandomBtn" class="btn">🎲 Slučajno</button>
+    </div>
+    <div class="hint" id="skinHint">Pretraga preko skins.webamp.org (Algolia). Ili klikni „Slučajno".</div>
+    <div id="skinResults" class="skin-grid"></div>
+  </section>
+
+  <!-- Files tab -->
+  <section id="tab-files" class="tab-panel">
+    <div class="files-zone">
+      <label class="file-drop" for="fileInput">
+        <div class="file-drop-icon">📁</div>
+        <div class="file-drop-text">Izaberi MP3 / OGG / WAV / M4A fajlove sa telefona</div>
+        <div class="file-drop-sub">Tap ovde ili prevuci fajlove</div>
+        <input type="file" id="fileInput" accept="audio/*" multiple hidden>
+      </label>
+      <div id="fileList" class="file-list"></div>
+    </div>
+  </section>
+
+  <!-- About tab -->
+  <section id="tab-about" class="tab-panel">
+    <div class="about-body">
+      <h2>Webamp PWA</h2>
+      <p>Klasični player look u browseru (preko <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Webamp</a> biblioteke koja reimplementira Winamp 2 — Jordan Eldredge / captbaritone). Radi kao instalabilna PWA na Android-u: pokreni iz home screen-a, okreni telefon u landscape, ceo ekran.</p>
+      <p class="muted" style="font-size:11px">Nije zvanično povezan sa Winamp-om niti Llama Group SA. Naziv „Winamp" je registrovan trademark — ovde koristim samo deskriptivno (Webamp emulira izgled Winamp-a 2).</p>
+      <ul>
+        <li><strong>Radio</strong> — preko <a href="https://www.radio-browser.info" target="_blank" rel="noopener">Radio Browser</a>, ~30k stanica</li>
+        <li><strong>Skinovi</strong> — preko <a href="https://skins.webamp.org" target="_blank" rel="noopener">skins.webamp.org</a>, 65k+ klasičnih .wsz fajlova</li>
+        <li><strong>Lokalni fajlovi</strong> — MP3/OGG/WAV/M4A sa telefona</li>
+        <li><strong>Swipe levo/desno</strong> na Webamp prozoru menja skin (kad ih učitaš)</li>
+        <li><strong>Offline</strong> — jednom učitani skinovi i shell se kešuju (Service Worker)</li>
+      </ul>
+      <p class="muted">Webamp library by <a href="https://github.com/captbaritone/webamp" target="_blank" rel="noopener">Jordan Eldredge (captbaritone)</a>.</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px">
+        <button id="btnClearCache" class="btn">Očisti keš</button>
+        <button id="btnClearPlaylist" class="btn">Očisti sačuvanu playlistu</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="statusMsg" class="status-msg hidden"></div>
+</div>
+
+<!-- Player view (visible after first play). Webamp's own skin chrome
+     (X = back to launcher, _ = toggle minimal/full) is the UI — no custom
+     controls overlay. A single floating Share FAB stays bottom-right. -->
+<div id="playerView" class="player-view hidden">
+  <div id="webampHost" class="webamp-host"></div>
+  <!-- Left-edge drawer for share + extras. Collapsed by default — a thin
+       vertical handle ‹ on the left edge, barely visible. Tap to expand. -->
+  <div id="shareDrawer" class="share-drawer" aria-hidden="false">
+    <div class="share-panel">
+      <button id="btnShare" class="share-btn" title="Share current skin / station" aria-label="Share">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </button>
+      <button id="btnDrawerClose" class="share-btn share-btn-sm" title="Close" aria-label="Close">×</button>
+    </div>
+    <button id="shareHandle" class="share-handle" title="Share" aria-label="Open share drawer">⌃</button>
+  </div>
+  <div class="swipe-hint" id="swipeHint">⇆ skin   ↓ EQ+playlist   ↑ minimal</div>
+</div>
+
+<script src="vendor_js/webamp.bundle.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
