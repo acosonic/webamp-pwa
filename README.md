@@ -4,7 +4,7 @@ A mobile-first Progressive Web App that puts the classic 1990s desktop-player lo
 
 > **Unofficial hobby project.** Not affiliated with, endorsed by, or sponsored by Winamp or Llama Group SA. Built on top of the open-source [Webamp](https://github.com/captbaritone/webamp) library (by Jordan Eldredge / captbaritone, MIT). The name "Winamp" is mentioned in this README only descriptively (nominative fair use) — Webamp re-implements the look of Winamp 2 in JavaScript.
 
-**Live demo:** <https://acosonic.com/projects/webamp-pwa/>
+**Live demo:** <https://acosonic.github.io/webamp-pwa/>
 
 ## Features
 
